@@ -8,9 +8,8 @@ public class ChallengeDay1 {
 	public static void main(String[] args) {
 		String inputFile = "./resources/InputDay1";
 		
-		// int partOne = findTopOne(inputFile);
-		//System.out.println(partOne);
-		
+		int partOne = findTopOne(inputFile);
+		System.out.println(partOne);
 		int partTwo = findTopThree(inputFile);
 		System.out.println(partTwo);
 	}
