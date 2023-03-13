@@ -19,7 +19,6 @@ public class ChallengeDay1 {
 		int tempCal = 0;
 		int maxCal = 0;
 		
-		
 		try {
 			File myInput = new File(path);
 			Scanner scanner = new Scanner(myInput);
