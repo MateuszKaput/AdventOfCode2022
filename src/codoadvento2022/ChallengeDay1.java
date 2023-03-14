@@ -32,6 +32,7 @@ public class ChallengeDay1 {
 					tempCal += Integer.parseInt(data);
 				}
 			}
+			
 			scanner.close();
 		}catch (FileNotFoundException e){
 			
