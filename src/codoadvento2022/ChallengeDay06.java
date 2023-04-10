@@ -5,11 +5,11 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 
-public class ChallengeDay6 {
+public class ChallengeDay06 {
 
 	public static void main(String[] args) {
 		
-		String inputFile = "./resources/InputDay6";
+		String inputFile = "./resources/InputDay06";
 		partOneResult(inputFile);
 		partTwoResult(inputFile);
 
@@ -47,13 +47,13 @@ public class ChallengeDay6 {
 			String data = scanner.nextLine();
 			int lettersToFind = 14;
 			for(int i=lettersToFind; i<data.length(); i++) {
-				Set<Character> lastFourLetters = new HashSet<>();
+				Set<Character> outputLetters = new HashSet<>();
 				String substringToCheck = data.substring(i-lettersToFind,i);
 				for(int j=0; j<lettersToFind; j++) {
-					lastFourLetters.add(substringToCheck.charAt(j));
+					outputLetters.add(substringToCheck.charAt(j));
 				}
-				if(lastFourLetters.size()==lettersToFind) {
-					System.out.println("letters: "+lastFourLetters+" index: "+i);
+				if(outputLetters.size()==lettersToFind) {
+					System.out.println("letters: "+outputLetters+" index: "+i);
 					break;
 				}
 			}

@@ -8,10 +8,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 
-public class ChallengeDay9 {
+public class ChallengeDay09 {
 	public static void main(String[] args) {
 		
-		String inputFile = "./resources/InputDay9";
+		String inputFile = "./resources/InputDay09";
 		int partOne = partOneResult(inputFile);
 		System.out.println("Part one: "+partOne);
 		int partTwo = partTwoResult(inputFile);

@@ -3,10 +3,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class ChallengeDay1 {
+public class ChallengeDay01 {
 
 	public static void main(String[] args) {
-		String inputFile = "./resources/InputDay1";
+		String inputFile = "./resources/InputDay01";
 		
 		int partOne = findTopOne(inputFile);
 		System.out.println(partOne);
@@ -70,7 +70,6 @@ public class ChallengeDay1 {
 			}
 			for(int i =0; i<3 ; i++) {
 				totalSum+= topThree[i];
-				System.out.println(topThree[i]);
 			}
 			scanner.close();
 		}catch (FileNotFoundException e){

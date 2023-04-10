@@ -3,20 +3,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-// A/X - ROCK 1
-// B/Y - PAPER 2
-// C/Z - SCISSORS 3
-// loss - 0, draw - 3, win - 6
-public class ChallengeDay2 {
+public class ChallengeDay02 {
 
 	public static void main(String[] args) {
-		String inputFile = "./resources/InputDay2";
+		String inputFile = "./resources/InputDay02";
 		
 		int partOne = partOneResult(inputFile);
-		System.out.println("część pierwsza: "+partOne);
+		System.out.println("Part one: "+partOne);
 		
 		int partTwo = partTwoResult(inputFile);
-		System.out.println("część druga: "+partTwo);
+		System.out.println("Part two: "+partTwo);
 	}
 	
 	public static int partOneResult (String path) {
@@ -44,8 +40,6 @@ public class ChallengeDay2 {
 		return result;
 	}
 	
-	// X - LOSE, Y - DRAW, Z - WIN
-	// A - ROCK, B - PAPER, C - SCISSORS
 	public static int partTwoResult (String path) {
 		int result = 0;
 		try {

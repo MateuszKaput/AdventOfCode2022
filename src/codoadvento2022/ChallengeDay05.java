@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class ChallengeDay5 {
+public class ChallengeDay05 {
 	public static void main(String[] args) {
-		String inputFile = "./resources/InputDay5";
+		String inputFile = "./resources/InputDay05";
 		
 		partOneResult(inputFile);
 		partTwoResult(inputFile);

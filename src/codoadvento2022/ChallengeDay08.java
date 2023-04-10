@@ -5,10 +5,10 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 
-public class ChallengeDay8 {
+public class ChallengeDay08 {
 	public static void main(String[] args) {
 		
-		String inputFile = "./resources/InputDay8";
+		String inputFile = "./resources/InputDay08";
 		int partOne = partOneResult(inputFile);
 		System.out.println("Part one: "+partOne);
 		int partTwo = partTwoResult(inputFile);

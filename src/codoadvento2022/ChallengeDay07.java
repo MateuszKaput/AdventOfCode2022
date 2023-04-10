@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 
-public class ChallengeDay7 {
+public class ChallengeDay07 {
 	
 	public static int maxSize = 100000;
 	public static int requiredCapacity = 30000000;
@@ -15,7 +15,7 @@ public class ChallengeDay7 {
 	static List<Integer> allValues2 = new ArrayList<>();
 	public static void main(String[] args) {
 		
-		String inputFile = "./resources/InputDay7";
+		String inputFile = "./resources/InputDay07";
 		int partOne = partOneResult(inputFile);
 		System.out.println("Part one: "+partOne);
 		int partTwo = partTwoResult(inputFile);

@@ -4,16 +4,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class ChallengeDay3 {
+public class ChallengeDay03 {
 
 	public static void main(String[] args) {
-		String inputFile = "./resources/InputDay3";
+		String inputFile = "./resources/InputDay03";
 		
 		int partOne = partOneResult(inputFile);
-		System.out.println("część pierwsza: "+partOne);
+		System.out.println("Part one: "+partOne);
 		
 		int partTwo = partTwoResult(inputFile);
-		System.out.println("część druga: "+partTwo);
+		System.out.println("Part two: "+partTwo);
 
 	}
 	
