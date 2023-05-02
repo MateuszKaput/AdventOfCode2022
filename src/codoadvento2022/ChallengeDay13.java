@@ -3,6 +3,7 @@ package codoadvento2022;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -10,85 +11,123 @@ import java.util.Set;
 import java.util.Stack;
 
 public class ChallengeDay13 {
+
 	public static void main(String[] args) throws FileNotFoundException {
 		String inputFile = "./resources/InputDay13";
 		File myInput = new File(inputFile);
 		Scanner scanner = new Scanner(myInput);
-
+		List<String> inputStrings = new ArrayList<>();
+		List<String> sortedList = new ArrayList<>();
 		int mainIndex = 1;
 		int mainSum = 0;
+
 		while (scanner.hasNextLine()) {
-			Stack<List<Integer>> leftStack = new Stack<>();
-			Stack<List<Integer>> rightStack = new Stack<>();
-			String left = scanner.nextLine();
-			String right = scanner.nextLine();
-			String empty = (scanner.hasNextLine()) ? scanner.nextLine() : "";
+			String oneLine = scanner.nextLine();
+			if (!(oneLine == "")) {
+				inputStrings.add(oneLine);
+			}
+		}
 
-			int lIndex = 0;
-			int rIndex = 0;
-
-			while (lIndex < left.length() && rIndex < right.length()) {
-				char lChar = left.charAt(lIndex);
-				char rChar = right.charAt(rIndex);
-
-				System.out.println("Checking pair:"+lChar+" "+rChar+" index: "+mainIndex);
-
-				if ((lChar == '[' && rChar == '[') || (lChar == ']' && rChar == ']')
-						|| (lChar == ',' && rChar == ',')) {
-					lIndex++;
-					rIndex++;
-				}
-				
-				if (lChar == '[' && Character.isDigit(rChar))
-					right = addList(right, rIndex);
-				
-				if (Character.isDigit(lChar) && rChar == '[')
-					left = addList(left, lIndex);
-				
-				if (Character.isDigit(lChar) && rChar == ']')
-					break;
-				
-				if (lChar == '[' && rChar == ']')
-					break;
-				
-				if (lChar == ',' && rChar == ']')
-					break;
-
-				if (lChar == ']' && Character.isDigit(rChar)) {
-					System.out.println("Correct " + mainIndex);
-					mainSum+=mainIndex;
-					break;
-				}
-				if (lChar == ']' && rChar == '[') {
-					System.out.println("Correct " + mainIndex);
-					mainSum+=mainIndex;
-					break;
-				}
-				if (lChar == ']' && rChar == ',') {
-					System.out.println("Correct " + mainIndex);
-					mainSum+=mainIndex;
-					break;
-				}
-
-				if (Character.isDigit(lChar) && Character.isDigit(rChar)) {
-					String lNum = getWholeNumber(left, lIndex);
-					String rNum = getWholeNumber(right, rIndex);
-					if (Integer.parseInt(lNum) < Integer.parseInt(rNum)) {
-						System.out.println("Correct " + mainIndex);
-						mainSum+=mainIndex;
-						break;
-					} else if (Integer.parseInt(rNum) < Integer.parseInt(lNum)) {
-						break;
-					} else {
-						lIndex += lNum.length();
-						rIndex += rNum.length();
-					}
-				}
+		for (int i = 1; i < inputStrings.size() - 1; i += 2) {
+			String left = inputStrings.get(i - 1);
+			String right = inputStrings.get(i);
+			if (compareStrings(left, right)) {
+				mainSum += mainIndex;
 			}
 			mainIndex++;
 		}
+
+		for (int i = 0; i < inputStrings.size(); i++) {
+			String currentChecking = inputStrings.get(i);
+			boolean added = false;
+			if (sortedList.size() == 0) {
+				sortedList.add(currentChecking);
+			} else {
+				for (int j = 0; j < sortedList.size(); j++) {
+					String sortedOne = sortedList.get(j);
+					if (compareStrings(currentChecking, sortedOne)) {
+						sortedList.add(j, currentChecking);
+						added = true;
+						break;
+					}
+				}
+				if (!added)
+					sortedList.add(currentChecking);
+			}
+		}
+		
+		String a = "[[2]]";
+		String b = "[[6]]";
+
+		for (int i = 0; i < sortedList.size(); i++) {
+			String current = sortedList.get(i);
+			if (compareStrings(a, current)) {
+				sortedList.add(i, a);
+				System.out.println("Adding first into index: " + i);
+				break;
+			}
+		}
+
+		for (int i = 0; i < sortedList.size(); i++) {
+			String current = sortedList.get(i);
+			if (compareStrings(b, current)) {
+				sortedList.add(i, b);
+				System.out.println("Adding second into index: " + i);
+				break;
+			}
+		}
+
+//		sortedList.forEach(line -> {
+//			System.out.println(line);
+//		});
+
 		System.out.println(mainSum);
 		scanner.close();
+	}
+
+	private static boolean compareStrings(String left, String right) {
+		int lIndex = 0;
+		int rIndex = 0;
+
+		while (lIndex < left.length() && rIndex < right.length()) {
+			char lChar = left.charAt(lIndex);
+			char rChar = right.charAt(rIndex);
+
+			if ((lChar == '[' && rChar == '[') || (lChar == ']' && rChar == ']') || (lChar == ',' && rChar == ',')) {
+				lIndex++;
+				rIndex++;
+			}
+
+			if (lChar == '[' && Character.isDigit(rChar))
+				right = addList(right, rIndex);
+
+			if (Character.isDigit(lChar) && rChar == '[')
+				left = addList(left, lIndex);
+
+			if ((Character.isDigit(lChar) && rChar == ']') || (lChar == '[' && rChar == ']')
+					|| (lChar == ',' && rChar == ']')) {
+				return false;
+			}
+
+			if ((lChar == ']' && Character.isDigit(rChar)) || (lChar == ']' && rChar == '[')
+					|| (lChar == ']' && rChar == ',')) {
+				return true;
+			}
+
+			if (Character.isDigit(lChar) && Character.isDigit(rChar)) {
+				String lNum = getWholeNumber(left, lIndex);
+				String rNum = getWholeNumber(right, rIndex);
+				if (Integer.parseInt(lNum) < Integer.parseInt(rNum)) {
+					return true;
+				} else if (Integer.parseInt(rNum) < Integer.parseInt(lNum)) {
+					return false;
+				} else {
+					lIndex += lNum.length();
+					rIndex += rNum.length();
+				}
+			}
+		}
+		return true;
 	}
 
 	private static String addList(String oldString, int index) {
