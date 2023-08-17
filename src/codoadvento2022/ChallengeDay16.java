@@ -14,14 +14,13 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class ChallengeDay16 {
+	public static HashMap<String, Valve> valveList = new HashMap<>();
 
 	public static void main(String[] args) throws FileNotFoundException {
 
 		String inputFile = "./resources/InputDay16";
 		File myInput = new File(inputFile);
 		Scanner scanner = new Scanner(myInput);
-
-		HashMap<String, Valve> valveList = new HashMap<>();
 
 		while (scanner.hasNext()) {
 			String singleValveString = scanner.nextLine();
@@ -40,14 +39,15 @@ public class ChallengeDay16 {
 
 		scanner.close();
 		List<String> openedValve = new ArrayList<>();
-		int x = recursiveSearch(valveList, "AA", openedValve, 30, 0);
+		int x = recursiveSearch("AA", openedValve, 30);
 		System.out.println(x);
+		int y = recursiveSearchSecondPart("AA","AA", openedValve, 26,26);
+		System.out.println(y);
 	}
 
-	public static int recursiveSearch(HashMap<String, Valve> valveList, String currentValve, List<String> openedValve,
-			int timeLeft, int iteration) {
+	public static int recursiveSearch(String currentValve, List<String> openedValve, int timeLeft) {
 		HashMap<String, int[]> possibleFlowOutcom = new HashMap<>();
-		possibleFlowOutcom = getDistances(currentValve, valveList, possibleFlowOutcom, 0, timeLeft);
+		possibleFlowOutcom = getDistances(currentValve, possibleFlowOutcom, 0, timeLeft);
 		int currentMax = 0;
 		for (Map.Entry<String, int[]> entry : possibleFlowOutcom.entrySet()) {
 			String key = entry.getKey();
@@ -56,15 +56,53 @@ public class ChallengeDay16 {
 				List<String> newOpenedValve = new ArrayList<>();
 				newOpenedValve.addAll(openedValve);
 				newOpenedValve.add(key);
-				int outcome = recursiveSearch(valveList, key, newOpenedValve, timeLeft - val[1], iteration + 1);
+				int outcome = recursiveSearch(key, newOpenedValve, timeLeft - val[1]);
 				currentMax = Math.max(currentMax, val[0] + outcome);
 			}
 		}
 		return currentMax;
 	}
 
-	public static HashMap<String, int[]> getDistances(String currentValve, HashMap<String, Valve> valveList,
-			HashMap<String, int[]> possibleFlowOutcom, int currentDistance, int timeLeft) {
+	public static int recursiveSearchSecondPart(String humanValve, String elephanValve, List<String> openedValve,
+			int humanTimeLeft, int elephanTimeLeft) {
+		
+		HashMap<String, int[]> possibleFlowOutcomHuman = new HashMap<>();
+		possibleFlowOutcomHuman = getDistances(humanValve, possibleFlowOutcomHuman, 0, humanTimeLeft);
+		
+		HashMap<String, int[]> possibleFlowOutcomElephan = new HashMap<>();
+		possibleFlowOutcomElephan = getDistances(elephanValve, possibleFlowOutcomElephan, 0, elephanTimeLeft);
+		
+		int currentMax = 0;
+		if(humanTimeLeft>elephanTimeLeft) {
+			for (Map.Entry<String, int[]> entry : possibleFlowOutcomHuman.entrySet()) {
+				String key = entry.getKey();
+				int[] val = entry.getValue();
+				if (val[0] > 0 && !openedValve.contains(key)) {
+					List<String> newOpenedValve = new ArrayList<>();
+					newOpenedValve.addAll(openedValve);
+					newOpenedValve.add(key);
+					int outcome = recursiveSearchSecondPart(key,elephanValve, newOpenedValve, humanTimeLeft - val[1],elephanTimeLeft);
+					currentMax = Math.max(currentMax, val[0] + outcome);
+				}
+			}
+		}else {
+			for (Map.Entry<String, int[]> entry : possibleFlowOutcomElephan.entrySet()) {
+				String key = entry.getKey();
+				int[] val = entry.getValue();
+				if (val[0] > 0 && !openedValve.contains(key)) {
+					List<String> newOpenedValve = new ArrayList<>();
+					newOpenedValve.addAll(openedValve);
+					newOpenedValve.add(key);
+					int outcome = recursiveSearchSecondPart(humanValve, key, newOpenedValve, humanTimeLeft, elephanTimeLeft - val[1]);
+					currentMax = Math.max(currentMax, val[0] + outcome);
+				}
+			}
+		}
+		return currentMax;
+	}
+
+	public static HashMap<String, int[]> getDistances(String currentValve, HashMap<String, int[]> possibleFlowOutcom,
+			int currentDistance, int timeLeft) {
 
 		if (timeLeft < 2)
 			return possibleFlowOutcom;
@@ -75,26 +113,21 @@ public class ChallengeDay16 {
 			possibleFlowOutcom.put(currentValve, flowInfo);
 		}
 		valveList.get(currentValve).availableMoves.forEach(key -> {
+			int[] flowInfo = new int[2];
+			flowInfo[0] = valveList.get(key).flowRate * (timeLeft - 2);
+			flowInfo[1] = currentDistance + 2;
+
 			if (!possibleFlowOutcom.containsKey(key)) {
-				int[] flowInfo = new int[2];
-				flowInfo[0] = valveList.get(key).flowRate * (timeLeft - 2);
-				flowInfo[1] = currentDistance + 2;
 				possibleFlowOutcom.put(key, flowInfo);
-				getDistances(key, valveList, possibleFlowOutcom, currentDistance + 1, timeLeft - 1);
+				getDistances(key, possibleFlowOutcom, currentDistance + 1, timeLeft - 1);
 
 			} else if (possibleFlowOutcom.get(key)[0] < valveList.get(key).flowRate * (timeLeft - 2)) {
-				int[] flowInfo = new int[2];
-				flowInfo[0] = valveList.get(key).flowRate * (timeLeft - 2);
-				flowInfo[1] = currentDistance + 2;
 				possibleFlowOutcom.put(key, flowInfo);
-				getDistances(key, valveList, possibleFlowOutcom, currentDistance + 1, timeLeft - 1);
-			}else if(possibleFlowOutcom.get(key)[0]==valveList.get(key).flowRate * (timeLeft - 2)) {
-				if(possibleFlowOutcom.get(key)[1]>currentDistance+2) {
-					int[] flowInfo = new int[2];
-					flowInfo[0] = valveList.get(key).flowRate * (timeLeft - 2);
-					flowInfo[1] = currentDistance + 2;
+				getDistances(key, possibleFlowOutcom, currentDistance + 1, timeLeft - 1);
+			} else if (possibleFlowOutcom.get(key)[0] == valveList.get(key).flowRate * (timeLeft - 2)) {
+				if (possibleFlowOutcom.get(key)[1] > currentDistance + 2) {
 					possibleFlowOutcom.put(key, flowInfo);
-					getDistances(key, valveList, possibleFlowOutcom, currentDistance + 1, timeLeft - 1);
+					getDistances(key, possibleFlowOutcom, currentDistance + 1, timeLeft - 1);
 				}
 			}
 		});
